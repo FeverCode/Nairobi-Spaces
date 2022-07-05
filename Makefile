@@ -14,7 +14,7 @@ makemigrations:
 	python3 manage.py makemigrations
 
 test:
-	python3 manage.py test
+	coverage run manage.py test && coverage report && coverage html
 
 superuser:
 	python3 manage.py createsuperuser

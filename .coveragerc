@@ -1,0 +1,7 @@
+[run]
+source=app/
+omit=
+    venv
+    */migrations/*
+    */tests/*
+    */__init__.py
