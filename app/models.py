@@ -1,12 +1,10 @@
 from django.db import models
 from django.contrib.auth.models import (AbstractBaseUser, BaseUserManager, PermissionsMixin)
 from rest_framework_simplejwt.tokens import RefreshToken
-from helpers.models import TrackingModel
 from django.contrib.auth.models import UnicodeUsernameValidator
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
 from django.conf import settings
-import jwt
 from datetime import datetime, timedelta
 from django.contrib.auth.models import AbstractUser
 
