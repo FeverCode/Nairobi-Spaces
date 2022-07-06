@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'phonenumber_field',
     'corsheaders',
+    'drf_yasg',
     
    
 
@@ -79,6 +80,8 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:8080",
     "http://localhost:4200",
 ]
+
+CORS_ALLOW_CREDENTIALS = True
 
 ROOT_URLCONF = 'spaces.urls'
 
@@ -110,7 +113,7 @@ WSGI_APPLICATION = 'spaces.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 MODE = config("MODE", default="dev")
-SECRET_KEY = config('SECRET_KEY')
+SECRET_KEY = config("SECRET_KEY")
 DEBUG = config('DEBUG')
 # development
 if config('MODE') == "dev":
@@ -191,23 +194,19 @@ STATICFILES_DIRS = (
 )
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.TokenAuthentication',
-    ),
+    'NON_FIELD_ERRORS_KEY': 'error',
     
     'DEFAULT_AUTHENTICATION_CLASSES': ( 
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
-}
-
-REST_FRAMEWORK = {
+    ),
+    
+    
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,
-    
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+
 }
+
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -258,7 +257,6 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = config('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY')
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = config('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET')
 
 # Email configurations remember to install python-decouple
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = config('EMAIL_USE_TLS')
 EMAIL_HOST = config('EMAIL_HOST')
 EMAIL_PORT = config('EMAIL_PORT')
