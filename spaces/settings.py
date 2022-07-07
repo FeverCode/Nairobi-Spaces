@@ -249,20 +249,20 @@ LOGIN_REDIRECT_URL = '/'
 LOGIN_URL = 'login'
 
 # social auth configs for github
-SOCIAL_AUTH_GITHUB_KEY = config('SOCIAL_AUTH_GITHUB_KEY')
-SOCIAL_AUTH_GITHUB_SECRET = config('SOCIAL_AUTH_GITHUB_SECRET')
+#SOCIAL_AUTH_GITHUB_KEY = config('SOCIAL_AUTH_GITHUB_KEY')
+#SOCIAL_AUTH_GITHUB_SECRET = config('SOCIAL_AUTH_GITHUB_SECRET')
 
 
 # social auth configs for google
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = config('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY')
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = config('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET')
+#SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = config('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY')
+#SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = config('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET')
 
 # Email configurations remember to install python-decouple
-EMAIL_USE_TLS = config('EMAIL_USE_TLS')
-EMAIL_HOST = config('EMAIL_HOST')
-EMAIL_PORT = config('EMAIL_PORT')
-EMAIL_HOST_USER = config('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+#EMAIL_USE_TLS = config('EMAIL_USE_TLS')
+#EMAIL_HOST = config('EMAIL_HOST')
+#EMAIL_PORT = config('EMAIL_PORT')
+#EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+#EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 
 
 # The Mpesa environment to use
@@ -272,39 +272,39 @@ MPESA_ENVIRONMENT = 'sandbox'
 
 # Credentials for the daraja app
 
-MPESA_CONSUMER_KEY = config('MPESA_CONSUMER_KEY')
-MPESA_CONSUMER_SECRET = config('MPESA_CONSUMER_SECRET')
+#MPESA_CONSUMER_KEY = config('MPESA_CONSUMER_KEY')
+#MPESA_CONSUMER_SECRET = config('MPESA_CONSUMER_SECRET')
 
 #Shortcode to use for transactions. For sandbox  use the Shortcode 1 provided on test credentials page
 
-MPESA_SHORTCODE = config('MPESA_SHORTCODE')
+#MPESA_SHORTCODE = config('MPESA_SHORTCODE')
 
 # Shortcode to use for Lipa na MPESA Online (MPESA Express) transactions
 # This is only used on sandbox, do not set this variable in production
 # For sandbox use the Lipa na MPESA Online Shorcode provided on test credentials page
 
-MPESA_EXPRESS_SHORTCODE = config('MPESA_EXPRESS_SHORTCODE')
+#MPESA_EXPRESS_SHORTCODE = config('MPESA_EXPRESS_SHORTCODE')
 
 # Type of shortcode
 # Possible values:
 # - paybill (For Paybill)
 # - till_number (For Buy Goods Till Number)
 
-MPESA_SHORTCODE_TYPE = config('TILL_NUMBER')
+#MPESA_SHORTCODE_TYPE = config('TILL_NUMBER')
 
 # Lipa na MPESA Online passkey
 # Sandbox passkey is available on test credentials page
 # Production passkey is sent via email once you go live
 
-MPESA_PASSKEY = config('MPESA_PASSKEY')
+#MPESA_PASSKEY = config('MPESA_PASSKEY')
 
 # Username for initiator (to be used in B2C, B2B, AccountBalance and TransactionStatusQuery Transactions)
 
-MPESA_INITIATOR_USERNAME = config('INITIATOR_USERNAME')
+#MPESA_INITIATOR_USERNAME = config('INITIATOR_USERNAME')
 
 # Plaintext password for initiator (to be used in B2C, B2B, AccountBalance and TransactionStatusQuery Transactions)
 
-MPESA_INITIATOR_SECURITY_CREDENTIAL = config('INITIATOR_SECURITY_CREDENTIAL')
+#MPESA_INITIATOR_SECURITY_CREDENTIAL = config('INITIATOR_SECURITY_CREDENTIAL')
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': datetime.timedelta(minutes=10),
