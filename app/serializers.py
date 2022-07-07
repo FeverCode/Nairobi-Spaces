@@ -40,7 +40,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('username', 'email', 'password',)
+        fields = ('username', 'email', 'password')
         
         
     def validate(self,attrs):
@@ -61,16 +61,16 @@ class RegisterSerializer(serializers.ModelSerializer):
     
 
 
-# class LoginSerializer(serializers.ModelSerializer):
+class LoginSerializer(serializers.ModelSerializer):
 
-#     password = serializers.CharField(
-#         max_length=128, min_length=6, write_only=True)
+    password = serializers.CharField(
+        max_length=128, min_length=6, write_only=True)
 
-#     class Meta:
-#         model = User
-#         fields = ('email', 'username', 'password', 'token')
+    class Meta:
+        model = User
+        fields = ('email', 'username', 'password', 'token')
 
-#         read_only_fields = ['token']
+        read_only_fields = ['token']
         
         
 class EmailVerificationSerializer(serializers.ModelSerializer):
@@ -80,44 +80,44 @@ class EmailVerificationSerializer(serializers.ModelSerializer):
         model = User
         fields = ['token']
 
-class LoginSerializer(serializers.ModelSerializer):
-    email = serializers.EmailField(max_length=255, min_length=3)
-    password = serializers.CharField(max_length=68, min_length=6, write_only=True)
-    username = serializers.CharField(max_length=255, min_length=3, read_only=True)
+# class LoginSerializer(serializers.ModelSerializer):
+#     email = serializers.EmailField(max_length=255, min_length=3)
+#     password = serializers.CharField(max_length=68, min_length=6, write_only=True)
+#     username = serializers.CharField(max_length=255, min_length=3, read_only=True)
 
-    tokens = serializers.CharField(max_length=255, min_length=3, read_only=True)
+#     tokens = serializers.CharField(max_length=255, min_length=3, read_only=True)
     
-    class Meta:
-        model = User
-        fields = ['email','password','username','tokens']
+#     class Meta:
+#         model = User
+#         fields = ['email','password','username','tokens']
     
     
-    def validate(self, attrs):
-        email = attrs.get('email', '')
-        password = attrs.get('password', '')
+#     def validate(self, attrs):
+#         email = attrs.get('email', '')
+#         password = attrs.get('password', '')
         
         
-        user=auth.authenticate(email=email, password=password)
+#         user=auth.authenticate(email=email, password=password)
         
-        if not user:
-            raise AuthenticationFailed('Invalid credentials, try again')
+#         if not user:
+#             raise AuthenticationFailed('Invalid credentials, try again')
         
-        if not user.is_active:
-            raise AuthenticationFailed('Account disabled, contact admin')
+#         if not user.is_active:
+#             raise AuthenticationFailed('Account disabled, contact admin')
         
-        if not user.is_verified:
-            raise AuthenticationFailed('Email is not verified')
+#         if not user.is_verified:
+#             raise AuthenticationFailed('Email is not verified')
         
         
-        return {
-            'email':user.email,
-            'username':user.username,
-            'tokens':user.tokens
+#         return {
+#             'email':user.email,
+#             'username':user.username,
+#             'tokens':user.tokens
             
-        }
+#         }
         
         
-        return super().validate(attrs)
+#         return super().validate(attrs)
     
     
 class ResetPasswordEmailRequestSerializer(serializers.Serializer):

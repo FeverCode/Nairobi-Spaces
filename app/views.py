@@ -83,35 +83,35 @@ class VerifyEmail(views.APIView):
             return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
     
     
-# class LoginView(APIView):
-#     def post(self, request):
-#         email = request.data['email']
-#         password = request.data['password']
+class LoginView(APIView):
+    def post(self, request):
+        email = request.data['email']
+        password = request.data['password']
 
-#         user = User.objects.filter(email=email).first()
+        user = User.objects.filter(email=email).first()
 
-#         if user is None:
-#             raise AuthenticationFailed('User not found!')
+        if user is None:
+            raise AuthenticationFailed('User not found!')
 
-#         if not user.check_password(password):
-#             raise AuthenticationFailed('Incorrect password!')
+        if not user.check_password(password):
+            raise AuthenticationFailed('Incorrect password!')
 
-#         payload = {
-#             'id': user.id,
-#             'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60),
-#             'iat': datetime.datetime.utcnow()
-#         }
+        payload = {
+            'id': user.id,
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60),
+            'iat': datetime.datetime.utcnow()
+        }
 
-#         token = jwt.encode(payload, 'secret',
-#                            algorithm='HS256')
+        token = jwt.encode(payload, 'secret',
+                           algorithm='HS256')
 
-#         response = Response()
+        response = Response()
 
-#         response.set_cookie(key='jwt', value=token, httponly=True)
-#         response.data = {
-#             'jwt': token
-#         }
-#         return response
+        response.set_cookie(key='jwt', value=token, httponly=True)
+        response.data = {
+            'jwt': token
+        }
+        return response
     
 class UserView(APIView):
     def get(self, request):
@@ -141,13 +141,13 @@ class LogoutView(APIView):
         return response 
      
 
-class LoginAPIView(generics.GenericAPIView):
-    serializer_class=LoginSerializer
-    def post(self, request):
-        serializer=self.serializer_class(data=request.data)
-        serializer.is_valid(raise_exception=True)
+# class LoginAPIView(generics.GenericAPIView):
+#     serializer_class=LoginSerializer
+#     def post(self, request):
+#         serializer=self.serializer_class(data=request.data)
+#         serializer.is_valid(raise_exception=True)
         
-        return Response(serializer.data, status=status.HTTP_200_OK)
+#         return Response(serializer.data, status=status.HTTP_200_OK)
 
         
 class RequestPasswordResetEmail(generics.GenericAPIView):
