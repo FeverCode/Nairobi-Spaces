@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'phonenumber_field',
     'corsheaders',
     'drf_yasg',
+    # 'drf_spectacular',
     
    
 
@@ -197,10 +198,17 @@ STATICFILES_DIRS = (
 REST_FRAMEWORK = {
     'NON_FIELD_ERRORS_KEY': 'error',
     
-    'DEFAULT_AUTHENTICATION_CLASSES': ( 
+    # 'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
-    
+     
     
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,
@@ -221,6 +229,15 @@ cloudinary.config(
     secure=True
 )
 
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header'
+        }
+    }
+}
 
 STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
@@ -307,6 +324,6 @@ MPESA_INITIATOR_USERNAME = config('INITIATOR_USERNAME')
 MPESA_INITIATOR_SECURITY_CREDENTIAL = config('INITIATOR_SECURITY_CREDENTIAL')
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': datetime.timedelta(minutes=10),
+    'ACCESS_TOKEN_LIFETIME': datetime.timedelta(minutes=60),
     'REFRESH_TOKEN_LIFETIME': datetime.timedelta(days=1),
 }

@@ -1,21 +1,14 @@
-
-from cmath import e
-from lib2to3.pgen2 import token
-from multiprocessing import AuthenticationError
-from os import stat
 from django.shortcuts import render
-from rest_framework import response
-from rest_framework import generics, status, views, permissions
-from app import serializers
-from app.models import User
+from rest_framework import response, generics, status, views, permissions,viewsets
+from app.models import Reservation, Spaces, User
 from app.renderers import UserRenderer
-from app.serializers import LoginSerializer, ResetPasswordEmailRequestSerializer, SetNewPasswordSerializer, UserSerializer, RegisterSerializer, EmailVerificationSerializer
+from app.serializers import LoginSerializer, ResetPasswordEmailRequestSerializer, SetNewPasswordSerializer, UserSerializer, RegisterSerializer, EmailVerificationSerializer, GoogleSocialAuthSerializer, ProfileSerializer, ReservationSerializer
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from .utils import Util
 from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
-from rest_framework.generics import GenericAPIView
+from rest_framework.generics import GenericAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from django.contrib.auth import authenticate
 from rest_framework.exceptions import AuthenticationFailed
 import jwt, datetime
@@ -26,6 +19,8 @@ from drf_yasg import openapi
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.utils.encoding import smart_str, force_str, smart_bytes, DjangoUnicodeDecodeError
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
+from .permissions import IsUser
+from rest_framework.permissions import IsAuthenticated
 
 # LoginSerializer,
 
@@ -56,6 +51,7 @@ class RegisterView(generics.GenericAPIView):
 
         Util.send_email(data)
         return Response(user_data, status=status.HTTP_201_CREATED)
+        
        
     
     
@@ -76,15 +72,74 @@ class VerifyEmail(views.APIView):
                 user.is_verified = True
                 user.save()
             return Response({'email': 'Successfully activated'}, status=status.HTTP_200_OK)
+            
         
         except jwt.ExpiredSignatureError as identifier:
             return Response({'error': 'Activation Expired'}, status=status.HTTP_400_BAD_REQUEST)
         except jwt.exceptions.DecodeError as identifier:
             return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
+        
     
     
-class LoginView(APIView):
+    
+# class LoginView(APIView):
+    
+#     def post(self, request):
+#         email = request.data['email']
+#         password = request.data['password']
+
+#         user = User.objects.filter(email=email).first()
+
+#         if user is None:
+#             raise AuthenticationFailed('User not found!')
+
+#         if not user.check_password(password):
+#             raise AuthenticationFailed('Incorrect password!')
+
+#         payload = {
+#             'id': user.id,
+#             'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60),
+#             'iat': datetime.datetime.utcnow()
+#         }
+
+#         token = jwt.encode(payload, 'secret',
+#                            algorithm='HS256')
+
+#         response = Response()
+
+#         response.set_cookie(key='jwt', value=token, httponly=True)
+#         response.data = {
+#             'jwt': token
+#         }
+#         return response
+    
+class UserView(APIView):
+    serializer_class = UserSerializer
+    
+    
+    def get(self, request):
+        token = request.COOKIES.get('jwt')
+        
+        if not token:
+            raise AuthenticationFailed('unauthorized')
+        try:
+            payload = jwt.decode(token, 'secret', algorithms=['HS256'])
+        except jwt.ExpiredSignatureError:
+            raise AuthenticationFailed('Unauthenticated!')
+
+        user = User.objects.filter(id=payload['id']).first()
+        serializer = UserSerializer(user)
+        return Response(serializer.data)
+    
+    
+class LoginAPIView(generics.GenericAPIView):
+    serializer_class = LoginSerializer
+
     def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        # return Response(serializer.data, status=status.HTTP_200_OK)
+
         email = request.data['email']
         password = request.data['password']
 
@@ -112,22 +167,8 @@ class LoginView(APIView):
             'jwt': token
         }
         return response
-    
-class UserView(APIView):
-    def get(self, request):
-        token = request.COOKIES.get('jwt')
-        
-        if not token:
-            raise AuthenticationFailed('unauthorized')
-        try:
-            payload = jwt.decode(token, 'secret', algorithms=['HS256'])
-        except jwt.ExpiredSignatureError:
-            raise AuthenticationFailed('Unauthenticated!')
 
-        user = User.objects.filter(id=payload['id']).first()
-        serializer = UserSerializer(user)
-        return Response(serializer.data)
-    
+
     
 class LogoutView(APIView):
     
@@ -140,15 +181,6 @@ class LogoutView(APIView):
         
         return response 
      
-
-# class LoginAPIView(generics.GenericAPIView):
-#     serializer_class=LoginSerializer
-#     def post(self, request):
-#         serializer=self.serializer_class(data=request.data)
-#         serializer.is_valid(raise_exception=True)
-        
-#         return Response(serializer.data, status=status.HTTP_200_OK)
-
         
 class RequestPasswordResetEmail(generics.GenericAPIView):
     serializer_class = ResetPasswordEmailRequestSerializer
@@ -178,6 +210,8 @@ class RequestPasswordResetEmail(generics.GenericAPIView):
     
 
 class PasswordTokenCheckAPI(generics.GenericAPIView):
+      serializer_class = SetNewPasswordSerializer
+      
       def get(self,request,uidb64,token):
           
           
@@ -206,3 +240,52 @@ class SetNewPasswordAPIView(generics.GenericAPIView):
         serializer.is_valid(raise_exception=True)
         return Response({'success':True,'message':'Password reset success'},status=status.HTTP_200_OK)
 
+
+class GoogleSocialAuthView(GenericAPIView):
+
+    serializer_class = GoogleSocialAuthSerializer
+
+    def post(self, request):
+        """
+        POST with "auth_token"
+        Send an idtoken as from google to get user information
+        """
+
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        data = ((serializer.validated_data)['auth_token'])
+        return Response(data, status=status.HTTP_200_OK)
+
+
+# class SpacesListAPIView(ListCreateAPIView):
+#     queryset = Spaces.objects.all()
+#     serializer_class = SpacesSerializer
+    
+    
+
+#     def get_queryset(self):
+#         return super().get_queryset() 
+    
+    
+class ReservationListAPIView(ListCreateAPIView):
+    
+    serializer_class = ReservationSerializer
+    queryset = Reservation.objects.all()
+    permission_classes = (IsAuthenticated,)
+   
+
+    def perform_create(self, serializer):
+        return serializer.save(user=self.request.user)
+    
+    def get_queryset(self):
+        return self.queryset.filter(user=self.request.user)
+
+
+class ReservationDetailAPIView(RetrieveUpdateDestroyAPIView):
+    serializer_class = ReservationSerializer
+    permission_classes = (IsAuthenticated,IsUser,)
+    queryset = Reservation.objects.all() 
+    lookup_field = 'id'
+
+    def get_queryset(self):
+        return self.queryset.filter(user=self.request.user)
