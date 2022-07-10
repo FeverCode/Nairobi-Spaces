@@ -19,7 +19,7 @@ from drf_yasg import openapi
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.utils.encoding import smart_str, force_str, smart_bytes, DjangoUnicodeDecodeError
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
-from .permissions import IsUser
+from .permissions import IsOwner
 from rest_framework.permissions import IsAuthenticated
 
 # LoginSerializer,
@@ -271,7 +271,7 @@ class ReservationListAPIView(ListCreateAPIView):
     
     serializer_class = ReservationSerializer
     queryset = Reservation.objects.all()
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticated,)
    
 
     def perform_create(self, serializer):
@@ -283,7 +283,7 @@ class ReservationListAPIView(ListCreateAPIView):
 
 class ReservationDetailAPIView(RetrieveUpdateDestroyAPIView):
     serializer_class = ReservationSerializer
-    permission_classes = (IsAuthenticated,IsUser,)
+    permission_classes = (permissions.IsAuthenticated, IsOwner,)
     queryset = Reservation.objects.all() 
     lookup_field = 'id'
 

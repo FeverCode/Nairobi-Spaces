@@ -48,7 +48,7 @@ INSTALLED_APPS = [
     'sass_processor',
     'rest_framework',
     'social_django',
-    'rest_framework.authtoken',
+    # 'rest_framework.authtoken',
     'django_daraja',
     'crispy_forms',
     'phonenumber_field',
@@ -200,13 +200,13 @@ REST_FRAMEWORK = {
     
     # 'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
-    ),
+    # 'DEFAULT_PERMISSION_CLASSES': (
+    #     'rest_framework.permissions.IsAuthenticated',
+    # ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.BasicAuthentication',
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        # 'rest_framework.authentication.BasicAuthentication',
+        # 'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
      
     

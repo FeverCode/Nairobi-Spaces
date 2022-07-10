@@ -20,10 +20,9 @@ class ReservationSerializer(serializers.ModelSerializer):
                   'user', 'dateFrom', 'dateTo', 'time']
 
 class ProfileSerializer(serializers.ModelSerializer):
-    reservation = ReservationSerializer()
     class Meta:
         model = Profile
-        fields = ['id', 'user', 'name', 'email','photo', 'bio', 'location', 'contact','reservation']
+        fields = ['id', 'user', 'name', 'email','photo', 'bio', 'location', 'contact']
     
 
 
