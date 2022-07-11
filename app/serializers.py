@@ -25,12 +25,13 @@ class ProfileSerializer(serializers.ModelSerializer):
     
 
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     profile = ProfileSerializer()
+    
     
     class Meta:
         model = User
-        fields = ['url','id','username', 'email', 'password','profile']
+        fields = ['id','username', 'email', 'password','profile']
         extra_kwargs = {
             'password': {'write_only': True}
         }
@@ -183,7 +184,7 @@ class SpacesSerializer(serializers.ModelSerializer):
        
     class Meta: 
         model = Spaces
-        fields = ['id','space', 'description', 'photo', 'price', 'location']
+        fields = ['id','name', 'description', 'photo', 'price', 'location']
     
     
 

@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404, render
 from rest_framework import response, generics, status, views, permissions,viewsets
 from app.models import Profile, Reservation, Spaces, User
 from app.renderers import UserRenderer
-from app.serializers import LoginSerializer, ResetPasswordEmailRequestSerializer, SetNewPasswordSerializer, UserSerializer, RegisterSerializer, EmailVerificationSerializer, GoogleSocialAuthSerializer, ProfileSerializer, ReservationSerializer
+from app.serializers import LoginSerializer, ResetPasswordEmailRequestSerializer, SetNewPasswordSerializer, SpacesSerializer, UserSerializer, RegisterSerializer, EmailVerificationSerializer, GoogleSocialAuthSerializer, ProfileSerializer, ReservationSerializer
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from .utils import Util
@@ -27,6 +27,12 @@ from .permissions import (IsOwnerOrReadOnly, IsAdminUserOrReadOnly, IsSameUserAl
 # Create your views here.
 
 class RegisterView(generics.GenericAPIView):
+    
+    """User registers with name, email and password
+
+    Returns:
+        sends verification email with activation token
+    """    
    
     serializer_class = RegisterSerializer
     renderer_classes = (UserRenderer,)
@@ -56,6 +62,11 @@ class RegisterView(generics.GenericAPIView):
     
     
 class VerifyEmail(views.APIView):
+    
+    """Email verification view
+
+    """    
+    
     serializer_class = EmailVerificationSerializer
 
     token_param_config = openapi.Parameter(
@@ -81,6 +92,18 @@ class VerifyEmail(views.APIView):
         
     
 class UserList(generics.ListCreateAPIView):
+    
+    """Creates a user instance view
+
+    Raises:
+        AuthenticationFailed: when wrong password is entered
+        AuthenticationFailed: when email is not verified
+
+    Returns:
+        verified user details
+    """    
+    
+    
     serializer_class = UserSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,
                           IsSameUserAllowEditionOrReadOnly,)
@@ -105,12 +128,22 @@ class UserList(generics.ListCreateAPIView):
             raise AuthenticationFailed('Unauthenticated!')
 
         user = User.objects.filter(id=payload['id']).first()
-        serializer = UserSerializer(user)
+        serializer_context = {
+            'request': request,
+        }
+        serializer = UserSerializer(user, context=serializer_context)
         return Response(serializer.data)
     
     
 class ProfileAPI(RetrieveUpdateDestroyAPIView):
-    
+    """_summary_ = 'Update a user profile'
+
+    Args:
+        RetrieveUpdateDestroyAPIView (_type_): updates a user profile, displays a user profile, deletes a user profile
+
+    Returns:
+        _type_: _description_
+    """    
     serializer_class = ProfileSerializer
     def get(self, request, *args, **kwargs):
         user = get_object_or_404(User, pk=kwargs['user_id'])
@@ -243,16 +276,6 @@ class GoogleSocialAuthView(GenericAPIView):
         data = ((serializer.validated_data)['auth_token'])
         return Response(data, status=status.HTTP_200_OK)
 
-
-# class SpacesListAPIView(ListCreateAPIView):
-#     queryset = Spaces.objects.all()
-#     serializer_class = SpacesSerializer
-    
-    
-
-#     def get_queryset(self):
-#         return super().get_queryset() 
-    
     
 class ReservationListAPIView(ListCreateAPIView):
     
@@ -276,4 +299,12 @@ class ReservationDetailAPIView(RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return self.queryset.filter(user=self.request.user)
+
+
+class SpacesListAPIView(ListCreateAPIView):
+
+    serializer_class = SpacesSerializer
+    queryset = Spaces.objects.all()
+
+
 

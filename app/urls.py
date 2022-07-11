@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from app.views import PasswordTokenCheckAPI, ProfileAPI, RequestPasswordResetEmail, ReservationDetailAPIView, ReservationListAPIView, SetNewPasswordAPIView, VerifyEmail, RegisterView, GoogleSocialAuthView
+from app.views import PasswordTokenCheckAPI, ProfileAPI, RequestPasswordResetEmail, ReservationDetailAPIView, ReservationListAPIView, SetNewPasswordAPIView, SpacesListAPIView, VerifyEmail, RegisterView, GoogleSocialAuthView
 from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
@@ -22,6 +22,6 @@ urlpatterns = [
     path('google/', GoogleSocialAuthView.as_view()),
     path('reservations/', ReservationListAPIView.as_view(), name='reservations'),
     path('reservations/<int:id>', views.ReservationDetailAPIView.as_view(),name='reservations'),
-    # path('spaces/', SpacesListAPIView.as_view(), name='spaces'),
+    path('spaces/', SpacesListAPIView.as_view(), name='spaces'),
     
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
