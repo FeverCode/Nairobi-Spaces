@@ -284,25 +284,24 @@ class ReservationListAPIView(ListCreateAPIView):
     
     serializer_class = ReservationSerializer
     queryset = Reservation.objects.all()
-    permission_classes = (permissions.IsAuthenticated,)
-   
-
-    def perform_create(self, serializer):
-        return serializer.save(user=self.request.user)
     
-    def get_queryset(self):
-        return self.queryset.filter(user=self.request.user)
 
 
 class ReservationDetailAPIView(RetrieveUpdateDestroyAPIView):
+    
     serializer_class = ReservationSerializer
-    permission_classes = (permissions.IsAuthenticated, IsOwner,)
-    queryset = Reservation.objects.all() 
+    permission_classes = (permissions.IsAuthenticated,)
+    queryset = Reservation.objects.all()
     lookup_field = 'id'
-
-    def get_queryset(self):
-        return self.queryset.filter(user=self.request.user)
-
+    
+    def post(self, request, format=None):
+        serializer = ReservationSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    
 
 class SpacesListAPIView(ListCreateAPIView):
 

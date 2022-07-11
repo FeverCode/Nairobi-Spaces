@@ -75,8 +75,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 class Spaces(models.Model):
     CATEGORY_OPTIONS = [
         ('Suncity Picnic Scene', 'Suncity Picnic Scene'),
-        ('Serenity Chill Space ', 'Serenity Chill Space '),
-        ('Ihub Office Workspace ', 'Ihub Office Workspace'),
+        ('Serenity Chill Space', 'Serenity Chill Space '),
+        ('Ihub Office Workspace', 'Ihub Office Workspace'),
     ]
     name = models.CharField(max_length=200, choices=CATEGORY_OPTIONS, blank=True)
     description = models.TextField()
@@ -123,6 +123,11 @@ class Reservation(models.Model):
     dateFrom = models.DateField(null=False, blank=False, unique=True)
     dateTo = models.DateField(null=False, blank=False, unique=True)
     time = models.TimeField(null=False, blank=False, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-updated_at']
 
     def __str__(self):
         return str(self.space)
