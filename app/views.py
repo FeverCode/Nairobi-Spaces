@@ -1,6 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from rest_framework import response, generics, status, views, permissions,viewsets
-from app.models import Reservation, Spaces, User
+from app.models import Profile, Reservation, Spaces, User
 from app.renderers import UserRenderer
 from app.serializers import LoginSerializer, ResetPasswordEmailRequestSerializer, SetNewPasswordSerializer, UserSerializer, RegisterSerializer, EmailVerificationSerializer, GoogleSocialAuthSerializer, ProfileSerializer, ReservationSerializer
 from rest_framework.response import Response
@@ -21,8 +21,8 @@ from django.utils.encoding import smart_str, force_str, smart_bytes, DjangoUnico
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from .permissions import IsOwner
 from rest_framework.permissions import IsAuthenticated
+from .permissions import (IsOwnerOrReadOnly, IsAdminUserOrReadOnly, IsSameUserAllowEditionOrReadOnly)
 
-# LoginSerializer,
 
 # Create your views here.
 
@@ -113,9 +113,19 @@ class VerifyEmail(views.APIView):
 #         }
 #         return response
     
-class UserView(APIView):
+class UserList(generics.ListCreateAPIView):
     serializer_class = UserSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,
+                          IsSameUserAllowEditionOrReadOnly,)
     
+    
+    def post (self, request,format=None):
+        serializer=UserSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
     
     def get(self, request):
         token = request.COOKIES.get('jwt')
@@ -130,6 +140,16 @@ class UserView(APIView):
         user = User.objects.filter(id=payload['id']).first()
         serializer = UserSerializer(user)
         return Response(serializer.data)
+    
+    
+class ProfileAPI(RetrieveUpdateDestroyAPIView):
+    
+    serializer_class = ProfileSerializer
+    def get(self, request, *args, **kwargs):
+        user = get_object_or_404(User, pk=kwargs['user_id'])
+        profile_serializer = ProfileSerializer(user.profile)
+        return Response(profile_serializer.data)
+
     
     
 class LoginAPIView(generics.GenericAPIView):
@@ -289,3 +309,4 @@ class ReservationDetailAPIView(RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return self.queryset.filter(user=self.request.user)
+

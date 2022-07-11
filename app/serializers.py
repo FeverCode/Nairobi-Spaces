@@ -20,13 +20,14 @@ class ReservationSerializer(serializers.ModelSerializer):
                   'user', 'dateFrom', 'dateTo', 'time']
 
 class ProfileSerializer(serializers.ModelSerializer):
+    
     class Meta:
         model = Profile
         fields = ['id', 'user', 'name', 'email','photo', 'bio', 'location', 'contact']
     
 
 
-class UserSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.HyperlinkedModelSerializer):
     profile = ProfileSerializer()
     
     class Meta:
@@ -37,12 +38,22 @@ class UserSerializer(serializers.ModelSerializer):
         }
 
     def create(self, validated_data):
-        password = validated_data.pop('password', None)
-        instance = self.Meta.model(**validated_data)
-        if password is not None:
-            instance.set_password(password)
-        instance.save()
-        return instance
+        
+      
+        user = User.objects.create(url = validated_data['url'],email = validated_data['email'])
+
+        profile_data = validated_data.pop('profile')
+    
+        profile = Profile.objects.create(user = user,name = profile_data['name'])
+
+        return user,profile
+        
+        # password = validated_data.pop('password', None)
+        # instance = self.Meta.model(**validated_data)
+        # if password is not None:
+        #     instance.set_password(password)
+        # instance.save()
+        # return instance
 
 class RegisterSerializer(serializers.ModelSerializer):
 
