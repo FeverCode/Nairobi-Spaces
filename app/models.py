@@ -12,6 +12,8 @@ from cloudinary.models import CloudinaryField
 from phonenumber_field.modelfields import PhoneNumberField
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
+from django.core.validators import RegexValidator
+
 
 
 # Create your models here.
@@ -81,6 +83,9 @@ class Spaces(models.Model):
     photo = CloudinaryField('Image')
     price = models.DecimalField(max_digits=20, decimal_places=2)
     location = models.CharField(max_length=255)
+    
+    class Meta:
+        ordering = ['-id']
     
 
     def __str__(self):
@@ -155,8 +160,9 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     email = models.EmailField(max_length=255)
     photo = CloudinaryField('image', default='https://res.cloudinary.com/fevercode/image/upload/v1654534329/default_n0r7rf.png')
-    name = models.CharField(max_length=255, blank=True)
-    contact = PhoneNumberField(null=False, blank=False)
+    username = models.CharField(max_length=255, blank=True)
+    phone_regex = RegexValidator(regex='^[0-9]{10}$', message="Phone number must field up to 10 digits allowed.")
+    contact = models.CharField(validators=[phone_regex], max_length=13, blank=True)  # Validators should be a list
     location = models.CharField(max_length=255)
     bio = models.TextField(max_length=500, default='This is my bio')
     reviews = models.ForeignKey(Reviews, on_delete=models.CASCADE,null=True,blank=True)

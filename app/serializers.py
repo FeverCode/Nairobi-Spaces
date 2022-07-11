@@ -21,7 +21,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Profile
-        fields = ['id', 'user', 'name', 'email','photo', 'bio', 'location', 'contact']
+        fields = ['id', 'user', 'username', 'email','photo', 'bio', 'location', 'contact']
     
 
 
@@ -35,16 +35,25 @@ class UserSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'password': {'write_only': True}
         }
-
+    
     def create(self, validated_data):
-        
-        password = validated_data.pop('password', None)
-        instance = self.Meta.model(**validated_data)
-        if password is not None:
-            instance.set_password(password)
-        instance.save()
-        return instance
-              
+
+        # create user
+        user = User.objects.create(
+            username=validated_data['username'],
+            email=validated_data['email'],
+            # etc ...
+        )
+
+        profile_data = validated_data.pop('profile')
+        profile = Profile.objects.create(
+            user=user,
+            username=profile_data['username'],
+            email=profile_data['email'],
+            # etc...
+        )
+
+        return user
 
 class RegisterSerializer(serializers.ModelSerializer):
 
@@ -65,6 +74,7 @@ class RegisterSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError(
                    'The username must be alphanumeric.')
             return attrs
+    
 
     def create(self, validated_data):
         return User.objects.create_user(**validated_data)   

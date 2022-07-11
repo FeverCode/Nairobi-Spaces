@@ -144,11 +144,15 @@ class ProfileAPI(RetrieveUpdateDestroyAPIView):
     Returns:
         _type_: _description_
     """    
+    
     serializer_class = ProfileSerializer
-    def get(self, request, *args, **kwargs):
-        user = get_object_or_404(User, pk=kwargs['user_id'])
-        profile_serializer = ProfileSerializer(user.profile)
-        return Response(profile_serializer.data)
+    permission_classes = (permissions.IsAuthenticated, IsOwner,)
+    queryset = Profile.objects.all()
+    lookup_field = 'id'
+
+    def get_queryset(self):
+        return self.queryset.filter(user=self.request.user)
+    
 
     
     
@@ -260,7 +264,6 @@ class SetNewPasswordAPIView(generics.GenericAPIView):
         serializer.is_valid(raise_exception=True)
         return Response({'success':True,'message':'Password reset success'},status=status.HTTP_200_OK)
 
-
 class GoogleSocialAuthView(GenericAPIView):
 
     serializer_class = GoogleSocialAuthSerializer
@@ -305,6 +308,3 @@ class SpacesListAPIView(ListCreateAPIView):
 
     serializer_class = SpacesSerializer
     queryset = Spaces.objects.all()
-
-
-
