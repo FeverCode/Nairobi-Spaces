@@ -8,8 +8,6 @@ from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from . import google
 from .register import register_social_user
 import os
-
-
 from app.utils import Util
 
 
@@ -32,28 +30,20 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
     
     class Meta:
         model = User
-        fields = ['id','username', 'email', 'password','profile']
+        fields = ['url','id','username', 'email', 'password','profile']
         extra_kwargs = {
             'password': {'write_only': True}
         }
 
     def create(self, validated_data):
         
-      
-        user = User.objects.create(url = validated_data['url'],email = validated_data['email'])
-
-        profile_data = validated_data.pop('profile')
-    
-        profile = Profile.objects.create(user = user,name = profile_data['name'])
-
-        return user,profile
-        
-        # password = validated_data.pop('password', None)
-        # instance = self.Meta.model(**validated_data)
-        # if password is not None:
-        #     instance.set_password(password)
-        # instance.save()
-        # return instance
+        password = validated_data.pop('password', None)
+        instance = self.Meta.model(**validated_data)
+        if password is not None:
+            instance.set_password(password)
+        instance.save()
+        return instance
+              
 
 class RegisterSerializer(serializers.ModelSerializer):
 
@@ -79,22 +69,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         return User.objects.create_user(**validated_data)   
                 
           
-
-    
-
-
-# class LoginSerializer(serializers.ModelSerializer):
-
-#     password = serializers.CharField(
-#         max_length=128, min_length=6, write_only=True)
-
-#     class Meta:
-#         model = User
-#         fields = ('email', 'username', 'password', 'token')
-
-#         read_only_fields = ['token']
-        
-        
+   
 class EmailVerificationSerializer(serializers.ModelSerializer):
     token = serializers.CharField(max_length=555)
 
@@ -109,15 +84,7 @@ class LoginSerializer(serializers.ModelSerializer):
     username = serializers.CharField(
         max_length=255, min_length=3, read_only=True)
 
-    # tokens = serializers.SerializerMethodField()
-
-    # def get_tokens(self, obj):
-    #     user = User.objects.get(email=obj['email'])
-
-    #     return {
-    #         'refresh': user.tokens()['refresh'],
-    #         'access': user.tokens()['access']
-    #     }
+    
 
     class Meta:
         model = User
