@@ -12,10 +12,12 @@ from app.utils import Util
 
 
 class ReservationSerializer(serializers.ModelSerializer):
+    
+    owner = serializers.ReadOnlyField(source='owner.username')
     class Meta:
         model = Reservation
         fields = ['id','space', 'numberOfPeople',
-                  'user', 'dateFrom', 'dateTo', 'time']
+                  'owner', 'dateFrom', 'dateTo', 'time']
 
 class ProfileSerializer(serializers.ModelSerializer):
     
@@ -26,12 +28,14 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
+    
     profile = ProfileSerializer()
+    reservations= serializers.PrimaryKeyRelatedField(many=True, queryset=Reservation.objects.all())
     
     
     class Meta:
         model = User
-        fields = ['id','username', 'email', 'password','profile']
+        fields = ['id', 'username', 'email','password', 'profile','reservations']
         extra_kwargs = {
             'password': {'write_only': True}
         }

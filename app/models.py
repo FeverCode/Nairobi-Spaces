@@ -73,11 +73,11 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 class Spaces(models.Model):
-    CATEGORY_OPTIONS = [
+    CATEGORY_OPTIONS = (
         ('Suncity Picnic Scene', 'Suncity Picnic Scene'),
-        ('Serenity Chill Space', 'Serenity Chill Space '),
+        ('Serenity Chill Space', 'Serenity Chill Space'),
         ('Ihub Office Workspace', 'Ihub Office Workspace'),
-    ]
+    )
     name = models.CharField(max_length=200, choices=CATEGORY_OPTIONS, blank=True)
     description = models.TextField()
     photo = CloudinaryField('Image')
@@ -119,7 +119,7 @@ class Spaces(models.Model):
 class Reservation(models.Model):
     space = models.ForeignKey(Spaces, on_delete=models.CASCADE, related_name='space')
     numberOfPeople = models.IntegerField()
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    owner = models.ForeignKey('app.User', related_name='reservations', on_delete=models.CASCADE)
     dateFrom = models.DateField(null=False, blank=False, unique=True)
     dateTo = models.DateField(null=False, blank=False, unique=True)
     time = models.TimeField(null=False, blank=False, unique=True)
@@ -130,7 +130,7 @@ class Reservation(models.Model):
         ordering = ['-updated_at']
 
     def __str__(self):
-        return str(self.space)
+        return str(self.user)+'s reservations'
 
     def create_reservation(self):
         self.save()

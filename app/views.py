@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404, render
 from rest_framework import response, generics, status, views, permissions,viewsets
 from app.models import Profile, Reservation, Spaces, User
+from app.permissions import IsOwnerOrReadOnly
 from app.renderers import UserRenderer
 from app.serializers import LoginSerializer, ResetPasswordEmailRequestSerializer, SetNewPasswordSerializer, SpacesSerializer, UserSerializer, RegisterSerializer, EmailVerificationSerializer, GoogleSocialAuthSerializer, ProfileSerializer, ReservationSerializer
 from rest_framework.response import Response
@@ -19,9 +20,8 @@ from drf_yasg import openapi
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.utils.encoding import smart_str, force_str, smart_bytes, DjangoUnicodeDecodeError
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
-from .permissions import IsOwner
 from rest_framework.permissions import IsAuthenticated
-from .permissions import (IsOwnerOrReadOnly, IsAdminUserOrReadOnly, IsSameUserAllowEditionOrReadOnly)
+
 
 
 # Create your views here.
@@ -92,21 +92,10 @@ class VerifyEmail(views.APIView):
         
     
 class UserList(generics.ListCreateAPIView):
-    
-    """Creates a user instance view
-
-    Raises:
-        AuthenticationFailed: when wrong password is entered
-        AuthenticationFailed: when email is not verified
-
-    Returns:
-        verified user details
-    """    
-    
-    
+     
+    queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,
-                          IsSameUserAllowEditionOrReadOnly,)
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     
     
     def post (self, request,format=None):
@@ -135,7 +124,7 @@ class UserList(generics.ListCreateAPIView):
         return Response(serializer.data)
     
     
-class ProfileAPI(RetrieveUpdateDestroyAPIView):
+class UserDetail(generics.RetrieveUpdateDestroyAPIView):
     """_summary_ = 'Update a user profile'
 
     Args:
@@ -146,9 +135,8 @@ class ProfileAPI(RetrieveUpdateDestroyAPIView):
     """    
     
     serializer_class = ProfileSerializer
-    permission_classes = (permissions.IsAuthenticated, IsOwner,)
+    permission_classes = (permissions.IsAuthenticated, IsOwnerOrReadOnly,)
     queryset = Profile.objects.all()
-    lookup_field = 'id'
 
     def get_queryset(self):
         return self.queryset.filter(user=self.request.user)
@@ -283,26 +271,37 @@ class GoogleSocialAuthView(GenericAPIView):
         return Response(data, status=status.HTTP_200_OK)
 
     
-class ReservationListAPIView(ListCreateAPIView):
+class ReservationList(generics.ListCreateAPIView):
     
     serializer_class = ReservationSerializer
     queryset = Reservation.objects.all()
-    
-
-
-class ReservationDetailAPIView(RetrieveUpdateDestroyAPIView):
-    
-    serializer_class = ReservationSerializer
-    permission_classes = (permissions.IsAuthenticated,)
-    queryset = Reservation.objects.all()
-    lookup_field = 'id'
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     
     def post(self, request, format=None):
         serializer = ReservationSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
+            serializer.save(owner=self.request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
+
+
+class ReservationDetail(generics.RetrieveUpdateDestroyAPIView):
+    
+    queryset = Reservation.objects.all()
+    serializer_class = ReservationSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly,IsOwnerOrReadOnly]
+    
+   
+
+    
+   
+
+   
+
     
     
 
