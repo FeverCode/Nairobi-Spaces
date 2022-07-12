@@ -14,7 +14,7 @@ from app.utils import Util
 class ReservationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Reservation
-        fields = ['space', 'numberOfPeople',
+        fields = ['id','space', 'numberOfPeople',
                   'user', 'dateFrom', 'dateTo', 'time']
 
 class ProfileSerializer(serializers.ModelSerializer):
@@ -35,25 +35,7 @@ class UserSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'password': {'write_only': True}
         }
-    
-    def create(self, validated_data):
-
-        # create user
-        user = User.objects.create(
-            username=validated_data['username'],
-            email=validated_data['email'],
-            # etc ...
-        )
-
-        profile_data = validated_data.pop('profile')
-        profile = Profile.objects.create(
-            user=user,
-            username=profile_data['username'],
-            email=profile_data['email'],
-            # etc...
-        )
-
-        return user
+        
 
 class RegisterSerializer(serializers.ModelSerializer):
 
