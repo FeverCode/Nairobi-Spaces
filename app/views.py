@@ -20,6 +20,7 @@ from drf_yasg import openapi
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.utils.encoding import smart_str, force_str, smart_bytes, DjangoUnicodeDecodeError
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
+from .permissions import IsOwner
 from rest_framework.permissions import IsAuthenticated
 
 
@@ -91,55 +92,14 @@ class VerifyEmail(views.APIView):
             return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
         
     
-class UserList(generics.ListCreateAPIView):
-     
+class UserList(generics.ListAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-    
-    
-    def post (self, request,format=None):
-        serializer=UserSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
-    
-    def get(self, request):
-        token = request.COOKIES.get('jwt')
-        
-        if not token:
-            raise AuthenticationFailed('unauthorized')
-        try:
-            payload = jwt.decode(token, 'secret', algorithms=['HS256'])
-        except jwt.ExpiredSignatureError:
-            raise AuthenticationFailed('Unauthenticated!')
 
-        user = User.objects.filter(id=payload['id']).first()
-        serializer_context = {
-            'request': request,
-        }
-        serializer = UserSerializer(user, context=serializer_context)
-        return Response(serializer.data)
-    
-    
-class UserDetail(generics.RetrieveUpdateDestroyAPIView):
-    """_summary_ = 'Update a user profile'
 
-    Args:
-        RetrieveUpdateDestroyAPIView (_type_): updates a user profile, displays a user profile, deletes a user profile
-
-    Returns:
-        _type_: _description_
-    """    
-    
-    serializer_class = ProfileSerializer
-    permission_classes = (permissions.IsAuthenticated, IsOwnerOrReadOnly,)
-    queryset = Profile.objects.all()
-
-    def get_queryset(self):
-        return self.queryset.filter(user=self.request.user)
+class UserDetail(generics.RetrieveAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
     
 
     
@@ -283,32 +243,30 @@ class GoogleSocialAuthView(GenericAPIView):
         return Response(data, status=status.HTTP_200_OK)
 
     
-class ReservationList(generics.ListCreateAPIView):
+class ReservationList(ListCreateAPIView):
     
     serializer_class = ReservationSerializer
     queryset = Reservation.objects.all()
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-    lookup_field='id'
+    permission_classes = (permissions.IsAuthenticated,)
     
-    
-    def post(self, request, format=None):
-        serializer = ReservationSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save(owner=self.request.user)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
+        
+    def get_queryset(self):
+        return self.queryset.filter(owner=self.request.user)
 
 
 
-class ReservationDetail(generics.RetrieveUpdateDestroyAPIView):
+class ReservationDetail(RetrieveUpdateDestroyAPIView):
     
     queryset = Reservation.objects.all()
     serializer_class = ReservationSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly,IsOwnerOrReadOnly]
-
+    permission_classes = (permissions.IsAuthenticated, IsOwner,)
+    lookup_field = 'id'
+    
+    def get_queryset(self):
+        return self.queryset.filter(owner=self.request.user)
     
 
 class SpacesListAPIView(ListCreateAPIView):
