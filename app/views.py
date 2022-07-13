@@ -3,7 +3,7 @@ from rest_framework import response, generics, status, views, permissions,viewse
 from app.models import Profile, Reservation, Spaces, User
 from app.permissions import IsOwnerOrReadOnly
 from app.renderers import UserRenderer
-from app.serializers import LoginSerializer, ResetPasswordEmailRequestSerializer, SetNewPasswordSerializer, SpacesSerializer, UserSerializer, RegisterSerializer, EmailVerificationSerializer, GoogleSocialAuthSerializer, ProfileSerializer, ReservationSerializer
+from app.serializers import LoginSerializer, LogoutSerializer, ResetPasswordEmailRequestSerializer, SetNewPasswordSerializer, SpacesSerializer, UserSerializer, RegisterSerializer, EmailVerificationSerializer, GoogleSocialAuthSerializer, ProfileSerializer, ReservationSerializer
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from .utils import Util
@@ -150,48 +150,60 @@ class LoginAPIView(generics.GenericAPIView):
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
-        # return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
-        email = request.data['email']
-        password = request.data['password']
+        # email = request.data['email']
+        # password = request.data['password']
 
-        user = User.objects.filter(email=email).first()
+        # user = User.objects.filter(email=email).first()
 
-        if user is None:
-            raise AuthenticationFailed('User not found!')
+        # if user is None:
+        #     raise AuthenticationFailed('User not found!')
 
-        if not user.check_password(password):
-            raise AuthenticationFailed('Incorrect password!')
+        # if not user.check_password(password):
+        #     raise AuthenticationFailed('Incorrect password!')
 
-        payload = {
-            'id': user.id,
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60),
-            'iat': datetime.datetime.utcnow()
-        }
+        # payload = {
+        #     'id': user.id,
+        #     'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60),
+        #     'iat': datetime.datetime.utcnow()
+        # }
 
-        token = jwt.encode(payload, 'secret',
-                           algorithm='HS256')
+        # token = jwt.encode(payload, 'secret',
+        #                    algorithm='HS256')
 
-        response = Response()
+        # response = Response()
 
-        response.set_cookie(key='jwt', value=token, httponly=True)
-        response.data = {
-            'jwt': token
-        }
-        return response
+        # response.set_cookie(key='jwt', value=token, httponly=True)
+        # response.data = {
+        #     'jwt': token
+        # }
+        # return response
 
 
-    
-class LogoutView(APIView):
-    
+class LogoutView(generics.GenericAPIView):
+
+    class LogoutAPIView(generics.GenericAPIView):
+        serializer_class = LogoutSerializer
+
+    permission_classes = (permissions.IsAuthenticated,)
+
     def post(self, request):
-        response= Response()
-        response.delete_cookie('jwt')
-        response.data = {
-            'message': 'logged out'
-        }
+
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    # def post(self, request):
+    #     response= Response()
+    #     response.delete_cookie('jwt')
+    #     response.data = {
+    #         'message': 'logged out'
+    #     }
         
-        return response 
+    #     return response 
      
         
 class RequestPasswordResetEmail(generics.GenericAPIView):
@@ -276,6 +288,8 @@ class ReservationList(generics.ListCreateAPIView):
     serializer_class = ReservationSerializer
     queryset = Reservation.objects.all()
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    lookup_field='id'
+    
     
     def post(self, request, format=None):
         serializer = ReservationSerializer(data=request.data)
@@ -294,18 +308,12 @@ class ReservationDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Reservation.objects.all()
     serializer_class = ReservationSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly,IsOwnerOrReadOnly]
-    
-   
 
-    
-   
-
-   
-
-    
     
 
 class SpacesListAPIView(ListCreateAPIView):
 
     serializer_class = SpacesSerializer
     queryset = Spaces.objects.all()
+
+

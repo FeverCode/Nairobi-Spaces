@@ -65,11 +65,11 @@ class User(AbstractBaseUser, PermissionsMixin):
       
     def tokens(self):
         pass
-        # refresh = RefreshToken.for_user(self)
-        # return {
-        #     'refresh': str(refresh),
-        #     'access': str(refresh.access_token)
-        # }
+        refresh = RefreshToken.for_user(self)
+        return {
+            'refresh': str(refresh),
+            'access': str(refresh.access_token)
+        }
 
 
 class Spaces(models.Model):

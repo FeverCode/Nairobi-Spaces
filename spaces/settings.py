@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'phonenumber_field',
     'corsheaders',
     'drf_yasg',
+    'rest_framework_simplejwt.token_blacklist',
     # 'drf_spectacular',
     
    
@@ -205,9 +206,9 @@ REST_FRAMEWORK = {
     #     'rest_framework.permissions.IsAuthenticated',
     # ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.SessionAuthentication',
+    #     'rest_framework.authentication.SessionAuthentication',
         # 'rest_framework.authentication.BasicAuthentication',
-        # 'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
      
     
