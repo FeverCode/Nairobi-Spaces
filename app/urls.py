@@ -8,6 +8,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
+    path('', views.index),
     path('register/',RegisterView.as_view(), name='register'),
     path('login/', views.LoginAPIView.as_view(), name='login'),
     path('email-verify/', VerifyEmail.as_view(), name="email-verify"),

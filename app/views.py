@@ -26,7 +26,8 @@ from rest_framework.permissions import IsAuthenticated
 
 
 # Create your views here.
-
+def index(request):
+    return render(request, 'index.html')
 class RegisterView(generics.GenericAPIView):
     
     """User registers with name, email and password
@@ -141,10 +142,10 @@ class LoginAPIView(generics.GenericAPIView):
         # return response
 
 
-class LogoutView(generics.GenericAPIView):
 
-    class LogoutAPIView(generics.GenericAPIView):
-        serializer_class = LogoutSerializer
+
+class LogoutView(generics.GenericAPIView):
+    serializer_class = LogoutSerializer
 
     permission_classes = (permissions.IsAuthenticated,)
 
