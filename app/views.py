@@ -104,7 +104,9 @@ class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
 
 @login_required
 def profile(request):
-    return render(request, 'users/profile.html')
+    profile = Profile.objects.all()
+    reservations = Reservation.objects.all().order_by('id').reverse()
+    return render(request, 'users/profile.html', {'profile': profile, 'reservations': reservations})
 
 
 @login_required

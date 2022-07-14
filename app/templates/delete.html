@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load bootstrap5 %}
+{% load static%}
+{% block content %}
+
+<div style="margin-top:150px;margin-bottom:150px;" class="container">
+<h1>Delete Reservation...</h1>
+<br/><br/>
+<h3>Delete: {{reservation.space}}</h3>
+
+<br/>
+
+<div class="form-group">
+    <form method="POST">
+        {% csrf_token %}
+        <strong>Are you sure you want to delete this reservation?</strong>
+        <button type="submit" style="margin-left: 7em; margin-bottom: 2em;" class="btn btn-dark btn-lg">Delete</button>
+
+    </div>
+</div>    
+
+
+{% endblock %}

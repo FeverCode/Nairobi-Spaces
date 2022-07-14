@@ -4,16 +4,17 @@
 
 
 <script src="https://kit.fontawesome.com/08b4d018b1.js" crossorigin="anonymous"></script>
-    <!-- CSS only -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.8.10/css/mdb.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<!-- CSS only -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.8.10/css/mdb.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-    {% block styles%}
-    <link rel="stylesheet" type="text/css" href=" {% static 'css/profile.css' %} ">
-    {% endblock %}
+{% block styles%}
+<link rel="stylesheet" type="text/css" href=" {% static 'css/profile.css' %} ">
+{% endblock %}
 
 <section class="h-100 gradient-custom-2">
     <div style="margin-top:5px" class="container py-5 h-100">
@@ -36,7 +37,7 @@
                     <div class="p-4 text-black" style="background-color: #f8f9fa;">
                         <div class="d-flex justify-content-between text-center py-1">
                             <a href="{% url 'edit-profile'%}">
-                                <i class="bi bi-pencil-square"></i>
+                                <i class="bi bi-plus-lg"></i>
                                 <p>Edit Profile</p>
                             </a>
                             </a>
@@ -44,12 +45,12 @@
                                 <button class="btn profile-settings-btn" aria-label="profile settings"><i
                                         class="fa-solid fa-house" aria-hidden="true"> Home</i></button>
                             </a>
+                            <a href="{% url 'reservation'%}">
+                                <i class="bi bi-pencil-square"></i>
+                                <p>Add Reservation</p>
+                            </a>
 
                             <a href="#" class="link-primary mt-3">{{user.email}}</a>
-
-
-
-
                         </div>
                     </div>
                     <div class="card-body p-4 text-black">
@@ -68,14 +69,17 @@
                             {% if user.id == reservation.owner.id %}
                             <div class="col">
 
-                                <div class="card" style="width: 18rem;">  
+                                <div class="card" style="width: 18rem;">
                                     <div class="card-body">
-                                        <h5 class="card-title text-dark">{{reservation.space}}</h5>
-                                        <p class="card-text">{{reservation.numberOfPeople}}</p>
-                                        <p class="card-text">{{reservation.time}}</p>
-                                        <p class="card-text">{{reservation.dateFrom}}</p>
-                                        <p class="card-text">{{reservation.dateTo}}</p>
+                                        <h5 class="card-title text-dark">Space:{{reservation.space}}</h5>
+                                        <p class="card-text">Number of People:{{reservation.numberOfPeople}}</p>
+                                        <p class="card-text">Time:{{reservation.time}}</p>
+                                        <p class="card-text">Date From:{{reservation.dateFrom}}</p>
+                                        <p class="card-text">Date To:{{reservation.dateTo}}</p>
+                                        <a href="{% url 'update-reservation' reservation.pk%}"><i class="bi bi-pencil-square"></i></a>
+                                        <a href="{% url 'delete-reservation' reservation.pk %}"><i class="bi bi-trash-fill"></i></a>
                                     </div>
+                                    
                                 </div>
 
                             </div>
