@@ -46,6 +46,31 @@
                   <li>
                     <a class="page-scroll" href="#contact">Contact</a>
                   </li>
+                  {% if user.is_authenticated%}
+             
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown"
+                       aria-haspopup="true"
+                       aria-expanded="false">{{ user.username|title }} <img class="rounded-circle nav-img"
+                                                                            src="{{user.profile.profile_photo.url }}"
+                                                                            alt="" width="30">
+                    </a>
+                    <div class="dropdown-menu dropdown-primary" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item text-center" href="{% url 'user-profile'%}">Profile</a>
+                        <hr>
+                        <a class="dropdown-item text-center" href="{% url 'profile'%}"> Edit profile</a>
+                        <hr>
+                        <a href="{% url 'logout' %}" class="text-secondary text-center dropdown-item">Log Out</a>
+
+
+                    </div>
+                </li>
+                {% else %}
+                <li>
+                
+                <a href="{% url 'apply' %}" class="login mt-5"> Register/Login </a>
+                {% endif %}
+                </li>
                 </ul>
               </div>
               <!-- navbar-collapse -->

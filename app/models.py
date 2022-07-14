@@ -13,64 +13,10 @@ from phonenumber_field.modelfields import PhoneNumberField
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from django.core.validators import RegexValidator
-
+from django.contrib.auth.models import User
 
 
 # Create your models here.
-class UserManager(BaseUserManager):
-
-    def create_user(self, username, email, password=None):
-        if username is None:
-            raise TypeError('Users should have a username')
-        if email is None:
-            raise TypeError('Users should have a Email')
-
-        user = self.model(username=username, email=self.normalize_email(email))
-        user.set_password(password)
-        user.save()
-        return user
-
-    def create_superuser(self, username, email, password=None):
-        if password is None:
-            raise TypeError('Password should not be none')
-
-        user = self.create_user(username, email, password)
-        user.is_superuser = True
-        user.is_staff = True
-        user.save()
-        return user
-
-
-AUTH_PROVIDERS = {'github': 'github', 'google': 'google',
-                  'email': 'email'}
-
-
-class User(AbstractBaseUser, PermissionsMixin):
-    username = models.CharField(max_length=255, unique=True, db_index=True)
-    email = models.EmailField(max_length=255, unique=True, db_index=True)
-    is_verified = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=True)
-    is_staff = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    auth_provider = models.CharField(max_length=255, blank=False,null=False, default=AUTH_PROVIDERS.get('email'))
-
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username']
-
-    objects = UserManager()
-
-    def __str__(self):
-        return self.email
-      
-    def tokens(self):
-        pass
-        refresh = RefreshToken.for_user(self)
-        return {
-            'refresh': str(refresh),
-            'access': str(refresh.access_token)
-        }
-
 
 class Spaces(models.Model):
     CATEGORY_OPTIONS = (
@@ -98,7 +44,7 @@ class Spaces(models.Model):
         self.delete()
 
     def update_Spaces(self, new_choice):
-        self.deal = new_choice
+        self.space = new_choice
         self.save()
 
     @classmethod
@@ -119,7 +65,7 @@ class Spaces(models.Model):
 class Reservation(models.Model):
     space = models.ForeignKey(Spaces, on_delete=models.CASCADE, related_name='space')
     numberOfPeople = models.IntegerField()
-    owner = models.ForeignKey('app.User', related_name='reservations', on_delete=models.CASCADE)
+    owner = models.ForeignKey(User, related_name='reservations', on_delete=models.CASCADE)
     dateFrom = models.DateField(null=False, blank=False, unique=True)
     dateTo = models.DateField(null=False, blank=False, unique=True)
     time = models.TimeField(null=False, blank=False, unique=True)

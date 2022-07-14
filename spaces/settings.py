@@ -62,7 +62,6 @@ INSTALLED_APPS = [
 
 ]
 
-AUTH_USER_MODEL='app.User'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 MIDDLEWARE = [
