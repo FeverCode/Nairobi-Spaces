@@ -161,8 +161,8 @@ class ReservationForm(forms.ModelForm):
 
         widgets = {
             'space': forms.Select(attrs={'class': 'form-control'}),
-            'dateFrom': forms.DateInput(attrs={'type': 'dateFrom'}),
-            'dateTo': forms.DateInput(attrs={'type': 'dateTo'}),
+            'dateFrom': forms.DateInput(attrs={'type': 'date'}),
+            'dateTo': forms.DateInput(attrs={'type': 'date'}),
             'time': forms.TimeInput(attrs={'type': 'time'}),
             'numberOfPeople': forms.NumberInput(attrs={'type': 'number'}),
         }

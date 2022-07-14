@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404, render,redirect
 from django.views import View
 from rest_framework import response, generics, status, views, permissions,viewsets
-from app.forms import LoginForm, RegisterForm, UpdateProfileForm, UpdateUserForm
+from app.forms import LoginForm, MpesaForm, RegisterForm, ReservationForm, UpdateProfileForm, UpdateUserForm
 from app.models import Profile, Reservation, Spaces, User
 from app.permissions import IsOwnerOrReadOnly
 from app.renderers import UserRenderer
@@ -28,10 +28,18 @@ from django.contrib.auth.views import LoginView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.auth.views import LoginView, PasswordResetView, PasswordChangeView
 from django.contrib.auth.decorators import login_required
+from django_daraja.mpesa.core import MpesaClient
+from django.http import HttpResponse, JsonResponse
+from decouple import config
+from django.views.generic import View, ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.contrib.auth.mixins import LoginRequiredMixin
 # Create your views here.
 def index(request):
     return render(request, 'index.html')
 
+
+def space(request):
+    return render(request, 'space.html')
 
 def dispatch(self, request, *args, **kwargs):
       # will redirect to the home page if a user tries to access the register page while logged in
@@ -123,10 +131,76 @@ def edit_profile(request):
     return render(request, 'users/edit-profile.html', {'user_form': user_form, 'profile_form': profile_form})
 
 
+def mpesa_test(request):
+    form = MpesaForm(request.POST)
+
+    return render(request, 'pay-test.html', {'form': form})
 
 
+cl = MpesaClient()
+stk_push_callback_url = 'https://mtaani-meetup.herokuapp.com/'
+b2c_callback_url = 'https://mtaani-meetup.herokuapp.com/'
 
 
+def test(request):
+
+    return HttpResponse('Welcome to the home of daraja APIs')
+
+
+def oauth_success(request):
+	r = cl.access_token()
+	return JsonResponse(r, safe=False)
+
+
+def stk_push_success(request):
+    if request.method == 'POST':
+        form = MpesaForm(request.POST)
+        if form.is_valid():
+            phone_number = form.cleaned_data['phone_number']
+            amount = form.cleaned_data['amount']
+            account_reference = config('TILL_NUMBER')
+            transaction_desc = 'STK Push Description'
+            callback_url = stk_push_callback_url
+            r = cl.stk_push(phone_number, amount,
+                            account_reference, transaction_desc, callback_url)
+            return JsonResponse(r.response_description, safe=False)
+
+    else:
+        return JsonResponse(r.response_description, safe=False)
+
+
+class ReservationDeleteView(DeleteView):
+    model = Reservation
+    template_name = 'delete.html'
+    success_url = reverse_lazy('profile')
+
+
+class UpdateReservationView(UpdateView):
+    model = Reservation
+    form_class = ReservationForm
+    template_name = "reservation.html"
+    form_class = ReservationForm
+    success_url = reverse_lazy('profile')
+
+
+class CreateReservationtView(LoginRequiredMixin, CreateView):
+
+    model = Reservation
+    form_class = ReservationForm
+    template_name = 'reservation.html'
+    success_url = reverse_lazy('profile')
+
+    #   ↓        ↓ method of the CreateReservationtView
+
+    def form_valid(self, form):
+        form.instance.owner = self.request.user
+        return super().form_valid(form)
+
+    #   ↓              ↓ method of the CreateReservationtView
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data['tag_line'] = 'CreateReservationtView'
+        return data
 
 
 

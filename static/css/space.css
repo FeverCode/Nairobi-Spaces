@@ -1,0 +1,15 @@
+img {
+    border-radius: 10px;
+    margin: 8px;
+}
+
+
+nav a {
+    float: left;
+    display: block;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+
+}

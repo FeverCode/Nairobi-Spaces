@@ -1,0 +1,235 @@
+{% extends 'base.html' %}
+{% load bootstrap5 %}
+{% load static%}
+{% block content %}
+
+<div class="" style="height: 100vh; width: 100%">
+    <main>
+    <section class="space-banner-outer-panel space-banner-outer-panel">
+        <div class="pad-none space-banner-outer row">
+            <div class="col-md-8 pad-none space-banner-large-pic">
+                <div class="pad-none space-banner-middle-con">
+                    <img src="/media/img/space/ihub1.jpg" style="width:100%;height:100%;" alt="">
+                </div>
+            </div>
+            <div class="col-md-4 pad-none space-banner-con space-banner-middle-outer">
+                <div class="pad-none space-banner-side-con">
+                    <img src="/media/img/space/ihub2.jpg" style="width:100%;height:100%;">
+                </div> <br>
+                <div class="pad-none space-banner-side-con space-banner-border-con">
+                    <img src="/media/img/space/ihub5.jpg" style="width:100%;height:100%;">
+                </div>
+            </div>
+        </div>  
+    </section>
+    <br>
+    <section class="space-main-outer-panel">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-9 space-main-left-outer">
+                    <div class="space-desktop-name-outer">
+                        <h1 style="margin-top:20px;">I-HUB</h1>
+                        <div class="col-12 pad-none space-address-con"><i class="bx bx-location-plus bx-sm"></i>
+                            <a>Junction, 6th floor Senteu Plaza, Galana / Lenana Road</a>
+                        </div>
+                    </div> 
+
+                    <div class="col-12 pad-none space-sub-navbar-main horizontal-scroll content" id="space-navbar">
+                        <div class="" style="display: inline; ">
+                            <nav>
+                                <div class="nav nav-tabs" id="nav-tab" role="tablist" style="justify-content: space-around;;">
+                                    <a class="nav-item nav-link active" id="nav-private-office" data-toggle="tab" role="tab" aria-controls="nav-home" aria-selected="true">
+                                    Overview
+                                    </a>
+                                    <a class="nav-item nav-link " id="nav-hotdesk" data-toggle="tab" role="tab" aria-controls="nav-contact" aria-selected="false">
+                                    Pricing
+                                    </a>
+                                    <a class="nav-item nav-link " id="nav-dedicated-desk" data-toggle="tab" role="tab" aria-controls="nav-profile" aria-selected="false">
+                                    Location
+                                    </a>
+                                    <a class="nav-item nav-link " id="nav-dedicated-desk" data-toggle="tab" role="tab" aria-controls="nav-profile" aria-selected="false">
+                                    Reviews
+                                    </a>
+                                </div>
+                            </nav>
+                        </div>
+                    </div>
+
+                    <div class="space-description-outer" id="overview">
+                        <div class="col-12 pad-none space-description-left-con">
+                            <div class="space-full-description-inner" data-id="0">
+                                <p>Part of an eye-catching twin tower development, the Delta Corner Tower 2 business centre is our second centre in the complex and will 
+                                be as sure to impress as the first. The building occupies a standout location close to the Chiromo/Westlands Ring Road about 3.1 km 
+                                from the central business district of Kenya's capital, Nairobi.
+                                <br>
+                                The business centre is situated on the seventh floor of the building, which is set in tasteful landscaped.
+                                <br></p>
+                            </div>
+                        </div>                              
+                    </div>
+                    <br>
+                    <div class="space-description-outer" id="pricing">
+                        <div class="col-12 pad-none space-description-left-con">
+                            <h2><i class="bx bx-money bx-lg"></i>  PRICING</h2>
+                            <div class="space-full-pricing-inner card" data-id="0">
+                                <nav>
+                                    <div class="nav nav-tabs" id="nav-tab" role="tablist" style="justify-content: space-around;">
+                                        <a class="nav-item nav-link active" id="nav-private-office" data-toggle="tab" role="tab" aria-controls="nav-home" aria-selected="false">
+                                        Private Space
+                                        </a>
+                                        <a class="nav-item nav-link " id="nav-hotdesk" data-toggle="tab" role="tab" aria-controls="nav-contact" aria-selected="true">
+                                        Dedicated Desk
+                                        </a>
+                                        <a class="nav-item nav-link " id="nav-dedicated-desk" data-toggle="tab" role="tab" aria-controls="nav-profile" aria-selected="false">
+                                        Open Plan Seating
+                                        </a>
+                                        
+                                    </div>
+                                </nav>
+
+                                <div class="tab-content" id="nav-tabContent">
+                                    <div class="tab-pane fade show active" id="private-member" role="tabpanel" aria-labelledby="nav-private-office">
+                                        <div class="space-membership-fees-headings">
+                                            <table class="table table-hover">
+                                                <tbody>
+                                                    <tr>
+                                                        <th>People</th>
+                                                        <th>Duration</th>
+                                                        <th>Price</th>
+                                                        <th>Availability</th>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>2</td>
+                                                        <td>1 Week</td>
+                                                        <td>Kshs 2400</td>
+                                                        <td><a class="btn btn-outline-primary btn-sm" style="color: #006E6E;"data-enquiry-type="private_office" data-enquiry="{&quot;capacity&quot;:12,&quot;qty&quot;:0,&quot;duration_readable&quot;:&quot;1 Month&quot;,&quot;duration_metric&quot;:&quot;month&quot;,&quot;duration_qty&quot;:&quot;1&quot;,&quot;price&quot;:2400,&quot;currency_code&quot;:&quot;GBP&quot;,&quot;price_usd&quot;:3133,&quot;access_hours&quot;:&quot;24 Hours&quot;}">Enquire</a></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>1</td>
+                                                        <td>1 Week</td>
+                                                        <td>Kshs 1200</td>
+    
+                                                        <td><a class="btn btn-outline-primary btn-sm" style="color: #006E6E;" data-enquiry-type="private_office" data-enquiry="{&quot;capacity&quot;:12,&quot;qty&quot;:0,&quot;duration_readable&quot;:&quot;1 Month&quot;,&quot;duration_metric&quot;:&quot;month&quot;,&quot;duration_qty&quot;:&quot;1&quot;,&quot;price&quot;:2400,&quot;currency_code&quot;:&quot;GBP&quot;,&quot;price_usd&quot;:3133,&quot;access_hours&quot;:&quot;24 Hours&quot;}">Enquire</a></td>
+                                                    </tr>
+                                                    
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                    <div class="tab-pane fade " id="dedicated-member" role="tabpanel" aria-labelledby="nav-hotdesk" style="flex-shrink: 0;">
+                                        <div class="space-membership-fees-headings">
+                                            <table class="table table-hover">
+                                                <tbody>
+                                                    <tr>
+                                                        <th>#People</th>
+                                                        <th>Duration</th>
+                                                        <th>Price</th>
+                                                        <th>Availability</th>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>4</td>
+                                                        <td>3 Month</td>
+                                                        <td>Kshs 6000</td>
+                                                        <td><a class="btn btn-outline-primary btn-sm" data-enquiry-type="hot_desk" data-enquiry="{&quot;capacity&quot;:1,&quot;duration_readable&quot;:&quot;1 Month&quot;,&quot;duration_qty&quot;:&quot;1&quot;,&quot;duration_metric&quot;:&quot;month&quot;,&quot;price&quot;:100,&quot;currency_code&quot;:&quot;GBP&quot;,&quot;price_usd&quot;:131,&quot;access_hours&quot;:&quot;Reception Hours&quot;}">Enquire</a></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                    <div open class="tab-pane fade " id="open-member" role="tabpanel" aria-labelledby="nav-hotdesk" style="flex-shrink: 0;">
+                                        <div class="space-membership-fees-headings">
+                                            <table class="table table-hover">
+                                                <tbody>
+                                                    <tr>
+                                                        <th>#People</th>
+                                                        <th>Duration</th>
+                                                        <th>Price</th>
+                                                        <th>Availability</th>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>2</td>
+                                                        <td>3 Month</td>
+                                                        <td>Kshs 4000</td>
+                                                        <td><a class="btn btn-outline-primary btn-sm"data-enquiry-type="hot_desk" data-enquiry="{&quot;capacity&quot;:1,&quot;duration_readable&quot;:&quot;1 Month&quot;,&quot;duration_qty&quot;:&quot;1&quot;,&quot;duration_metric&quot;:&quot;month&quot;,&quot;price&quot;:100,&quot;currency_code&quot;:&quot;GBP&quot;,&quot;price_usd&quot;:131,&quot;access_hours&quot;:&quot;Reception Hours&quot;}">Enquire</a></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>                              
+                    </div>
+                    <br>
+                    <div class="space-description-outer" >
+                        <h2><i class="bx bx-location-plus bx-lg"></i>  LOCATION </h2>
+                        <div>
+                            <h5>Junction, 6th floor Senteu Plaza, Galana / Lenana Road</h5>
+                        </div>
+                        
+                        <img src="/media/img/space/maps.png" alt="location" style="width:100%;height:100%;margin-bottom:50px;">
+                    </div>
+                </div>
+
+                <div class="col-md-3 space-main-right-outer">
+
+                    <div class="col-12 pad-none space-right-members-reviews card">
+                        <br>
+                        <div class="space-members-reviews-outer text-center">
+                            <h4>REVIEWS</h4>
+                            <div class="col-12 pad-none space-member-review-rating" style="display: inline;">
+                                <i class="bx bx-star bx-md"></i>
+                                <i class="bx bx-star bx-md"></i>
+                                <i class="bx bx-star bx-md"></i>
+                                <i class="bx bx-star bx-md"></i>
+                                <i class="bx bx-star bx-md"></i>
+                            </div><br>
+                            <a style="color:#006E6E;"><strong>READ ALL REVIEWS</strong></a>
+                            <br>
+                        </div>
+                        <br>
+                    </div>                    
+                    <br>
+                    <div class="space-members-access-con card">
+                        <br>
+                        <div class="col-12 pad-none space-member-heading">
+                            <h3>Access Hours</h3>
+                        </div><br>
+                        <div class="col-12 pad-none space-member-content">
+                            <h4><i class="bx bx-time"> Opening Hours</i></h4>
+                            <div class="col-xs pad-none space-member-times" style="font-size:17px;"><span><strong>Monday - Friday:</strong></span></div>
+                            <div class="col-xs pad-none space-member-times" style="font-size:17px;"><span>8:30am-9:00pm</span></div>
+                            <div class="col-xs pad-none space-member-times" style="font-size:17px;"><span><strong>Saturday - Sunday:</strong></span></div>
+                            <div class="col-xs pad-none space-member-times" style="font-size:17px;"><span>8:30am-2:00pm</span></div>
+                            <div class="col-xs pad-none space-member-times" style="font-size:17px;"><span><strong>Public Holidays:</strong></span></div>
+                            <div class="col-xs pad-none space-member-times" style="font-size:17px;"><span>Closed</span></div>
+                        </div>
+                        <br>
+                        <div class="col-12 pad-none space-member-pricing">
+                            <div class="">
+                                <h3><i class="bx bx-money"></i>  Pricing</h3>
+                            <p>Starting at: </p>
+                            <h4><strong>Kshs. 500 / week</strong></h4>
+                            <br>
+                            <button type="button" class="btn btn-outline-primary">Contact Us</button>
+                            <br>
+                            <p></p>
+                            </div>
+                            
+                        </div>
+                    </div>
+        
+                </div>
+
+            </div>
+        </div>
+    </section>
+    <br>
+</main>
+
+</div>
+
+{% endblock %}

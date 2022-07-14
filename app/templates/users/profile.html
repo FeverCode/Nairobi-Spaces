@@ -65,15 +65,16 @@
                         </div>
                         <div class="row">
                             {% for reservation in reservations %}
-                            {% if user.id == reservation.user.id %}
+                            {% if user.id == reservation.owner.id %}
                             <div class="col">
 
-                                <div class="card" style="width: 18rem;">
-                                    <img src="{{post.photo.url}}" alt="class=" card-img-top" alt="">
+                                <div class="card" style="width: 18rem;">  
                                     <div class="card-body">
-                                        <h5 class="card-title">{{post.title}}</h5>
-                                        <p class="card-text">{{post.post}}</p>
-                                        <p>{{post.created_on}}</p>
+                                        <h5 class="card-title text-dark">{{reservation.space}}</h5>
+                                        <p class="card-text">{{reservation.numberOfPeople}}</p>
+                                        <p class="card-text">{{reservation.time}}</p>
+                                        <p class="card-text">{{reservation.dateFrom}}</p>
+                                        <p class="card-text">{{reservation.dateTo}}</p>
                                     </div>
                                 </div>
 
@@ -94,7 +95,5 @@
 
 </div>
 <!-- End of container -->
-
-
 
 {% endblock content %}

@@ -19,12 +19,12 @@ from django.contrib.auth.models import User
 # Create your models here.
 
 class Spaces(models.Model):
-    CATEGORY_OPTIONS = (
+    CHOICE = (
         ('Suncity Picnic Scene', 'Suncity Picnic Scene'),
         ('Serenity Chill Space', 'Serenity Chill Space'),
         ('Ihub Office Workspace', 'Ihub Office Workspace'),
     )
-    name = models.CharField(max_length=200, choices=CATEGORY_OPTIONS, blank=True)
+    name = models.CharField(max_length=200, choices=CHOICE, blank=True)
     description = models.TextField()
     photo = CloudinaryField('Image')
     price = models.DecimalField(max_digits=20, decimal_places=2)
@@ -76,7 +76,7 @@ class Reservation(models.Model):
         ordering = ['-updated_at']
 
     def __str__(self):
-        return str(self.user)+'s reservations'
+        return str(self.owner)+'s reservations'
 
     def create_reservation(self):
         self.save()
