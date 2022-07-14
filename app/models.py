@@ -124,4 +124,14 @@ class Profile(models.Model):
     
     
 class SubscribedUsers(models.Model):
-    email = models.EmailField()
+    email = models.EmailField(unique=True)
+
+
+class Contact(models.Model):
+    name = models.CharField(max_length=158)
+    subject = models.CharField(max_length=158)
+    email = models.EmailField(unique=True, max_length=50)
+    message = models.TextField()
+
+    def __str__(self):
+        return self.name

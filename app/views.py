@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404, render,redirect
 from django.views import View
 from rest_framework import response, generics, status, views, permissions,viewsets
 from app.forms import LoginForm, MpesaForm, RegisterForm, ReservationForm, UpdateProfileForm, UpdateUserForm
-from app.models import Profile, Reservation, Spaces, SubscribedUsers, User
+from app.models import Contact, Profile, Reservation, Spaces, SubscribedUsers, User
 from app.permissions import IsOwnerOrReadOnly
 from app.renderers import UserRenderer
 from rest_framework.response import Response
@@ -237,9 +237,36 @@ def validate_email(request):
     return res
 
 
+def contact(request):
+    if request.method == 'POST':
+        post_data = request.POST.copy()
+        email = post_data.get("email", None)
+        contact = Contact()
+        contact.email = email
+        contact.save()
+        # send a confirmation mail
+        subject = 'Nairobi Space Contact Feedback'
+        message = 'Hello ' + \
+            ', Thanks for contacting us. One of our team members will get back to you shortly. Please do not reply on this email.'
+        email_from = settings.EMAIL_HOST_USER
+        recipient_list = [email, ]
+        send_mail(subject, message, email_from, recipient_list)
+        res = JsonResponse({'msg': 'Thanks.Successfull!'})
+        return res
+    return render(request, 'index.html')
 
 
-
+# def validate_email(request):
+#     email = request.POST.get("email", None)
+#     if email is None:
+#         res = JsonResponse({'msg': 'Email is required.'})
+#     elif Contact.objects.get(email=email):
+#         res = JsonResponse({'msg': 'Email Address already exists'})
+#     elif not re.match(r"^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$", email):
+#         res = JsonResponse({'msg': 'Invalid Email Address'})
+#     else:
+#         res = JsonResponse({'msg': ''})
+#     return res
 
 
 
