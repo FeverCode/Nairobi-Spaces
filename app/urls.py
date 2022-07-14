@@ -8,12 +8,16 @@ from rest_framework_simplejwt.views import (
 from django.conf import settings
 from django.conf.urls.static import static
 from django.conf.urls import url
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
-    path('', views.index),
+    path('', views.index, name='index'),
     path('register/', views.RegisterView.as_view(), name='users-register'),
     path('login/', views.CustomLoginView.as_view(redirect_authenticated_user=True,template_name='registration/login.html', authentication_form=LoginForm), name='login'),
+    path('logout/', auth_views.LogoutView.as_view(template_name='registration/logout.html'), name='logout'),
     url(r'^oauth/', include('social_django.urls', namespace='social')),
+    path('password-reset/', views.ResetPasswordView.as_view(), name='password_reset'),
+    path('profile/', views.profile, name='profile'),
     # path('register/',RegisterView.as_view(), name='register'),
     # path('login/', views.LoginAPIView.as_view(), name='login'),
     # path('email-verify/', VerifyEmail.as_view(), name="email-verify"),

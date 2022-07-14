@@ -1,0 +1,21 @@
+{% extends "registration/base.html" %}
+{% block title %}Logout{% endblock title %}
+{% block content %}
+
+<div style="margin-top:100px;" class="container d-flex justify-content-center">
+    <div class="row">
+    <div class="card" style="width: 30rem;">
+        <div class="card-body">
+            <h5 class="card-title">You have been logged out</h5>
+            <p class="card-text">
+                Thanks for your time, contact us for any comments or suggestions.
+            </p>
+            <br>
+            <hr><a href="{% url 'login' %}" class="btn mt-2 btn-outline-info button-17 ml-5">Sign in again</a>
+        </div>
+    </div>
+    </div>
+</div>
+
+
+{% endblock content %}

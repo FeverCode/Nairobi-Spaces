@@ -16,7 +16,7 @@
 										<span class="icon-bar"></span>
 									</button>
                 <!-- Brand -->
-                <a class="navbar-brand page-scroll sticky-logo" href="index.html">
+                <a class="navbar-brand page-scroll sticky-logo" href="{% url 'index'%}">
                   <h1><span>Nairobi</span>Spaces</h1>
                   <!-- Uncomment below if you prefer to use an image logo -->
                   <!-- <img src="img/logo.png" alt="" title=""> -->
@@ -32,13 +32,13 @@
                     <a class="page-scroll" href="#about">About</a>
                   </li>
                   <li>
-                    <a class="page-scroll" href="#services">Services</a>
+                    <a class="page-scroll" href="#services">Our Values</a>
                   </li>
                   <li>
                     <a class="page-scroll" href="#team">Team</a>
                   </li>
                   <li>
-                    <a class="page-scroll" href="#portfolio">Services</a>
+                    <a class="page-scroll" href="#portfolio">Our Spaces</a>
                   </li>
                   <li>
                     <a class="page-scroll" href="#blog">Blog</a>
@@ -48,23 +48,12 @@
                   </li>
                   {% if user.is_authenticated%}
              
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown"
-                       aria-haspopup="true"
-                       aria-expanded="false">{{ user.username|title }} <img class="rounded-circle nav-img"
-                                                                            src="{{user.profile.profile_photo.url }}"
-                                                                            alt="" width="30">
-                    </a>
-                    <div class="dropdown-menu dropdown-primary" aria-labelledby="navbarDropdownMenuLink">
-                        <a class="dropdown-item text-center" href="{% url 'user-profile'%}">Profile</a>
-                        <hr>
-                        <a class="dropdown-item text-center" href="{% url 'profile'%}"> Edit profile</a>
-                        <hr>
-                        <a href="{% url 'logout' %}" class="text-secondary text-center dropdown-item">Log Out</a>
-
-
-                    </div>
-                </li>
+                <li>
+                    <a class="page-scroll" href="{% url 'profile'%}">{{ user.username|title }} </a>
+                  </li>
+                  <li>
+                    <a class="page-scroll" href="{% url 'logout'%}">Logout</a>
+                  </li>
                 {% else %}
                 <li>
                 

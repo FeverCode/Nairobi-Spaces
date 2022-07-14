@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404, render,redirect
 from django.views import View
 from rest_framework import response, generics, status, views, permissions,viewsets
-from app.forms import LoginForm, RegisterForm
+from app.forms import LoginForm, RegisterForm, UpdateProfileForm, UpdateUserForm
 from app.models import Profile, Reservation, Spaces, User
 from app.permissions import IsOwnerOrReadOnly
 from app.renderers import UserRenderer
@@ -25,8 +25,9 @@ from .permissions import IsOwner
 from rest_framework.permissions import IsAuthenticated
 from django.contrib import messages
 from django.contrib.auth.views import LoginView
-
-
+from django.contrib.messages.views import SuccessMessageMixin
+from django.contrib.auth.views import LoginView, PasswordResetView, PasswordChangeView
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 def index(request):
     return render(request, 'index.html')
@@ -80,18 +81,46 @@ class CustomLoginView(LoginView):
         return super(CustomLoginView, self).form_valid(form)
 
 
+class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
+    template_name = 'registration/password_reset.html'
+    email_template_name = 'registration/password_reset_email.html'
+    subject_template_name = 'registration/password_reset_subject'
+    success_message = "We've emailed you instructions for setting your password, " \
+                      "if an account exists with the email you entered. You should receive them shortly." \
+                      " If you don't receive an email, " \
+                      "please make sure you've entered the address you registered with, and check your spam folder."
+    success_url = reverse_lazy('login')
 
 
+@login_required
+def profile(request):
+    return render(request, 'users/profile.html')
 
 
+@login_required
+def user_profile(request):
+    profile = Profile.objects.all()
+    reservations = Reservation.objects.all().order_by('id').reverse()
+    return render(request, 'users/profile.html', {'profile': profile, 'reservations': reservations})
 
 
+@login_required
+def edit_profile(request):
+    if request.method == 'POST':
+        user_form = UpdateUserForm(request.POST, instance=request.user)
+        profile_form = UpdateProfileForm(
+            request.POST, request.FILES, instance=request.user.profile)
 
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            messages.success(request, 'Your profile is updated successfully')
+            return redirect(to='profile')
+    else:
+        user_form = UpdateUserForm(instance=request.user)
+        profile_form = UpdateProfileForm(instance=request.user.profile)
 
-
-
-
-
+    return render(request, 'users/edit-profile.html', {'user_form': user_form, 'profile_form': profile_form})
 
 
 
