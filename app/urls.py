@@ -21,7 +21,24 @@ urlpatterns = [
     path('<int:pk>/delete', ReservationDeleteView.as_view(),name='delete-reservation'),
     path('reservation/<int:pk>/', UpdateReservationView.as_view(), name='reservation'),
     path('reservation/', CreateReservationtView.as_view(),name='update-reservation'),
-    # path('register/',RegisterView.as_view(), name='register'),
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    # path('register/',RegisterAPIView.as_view(), name='register'),
     # path('login/', views.LoginAPIView.as_view(), name='login'),
     # path('email-verify/', VerifyEmail.as_view(), name="email-verify"),
     # path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
