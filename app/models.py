@@ -122,10 +122,7 @@ class Profile(models.Model):
         return f'{self.user.username} Profile'
     
     
-
-
-class NewsLetterRecepients(models.Model):
-    name = models.CharField(max_length=255, null=False, blank=False)
+class SubscribedUsers(models.Model):
     email = models.EmailField()
 
 

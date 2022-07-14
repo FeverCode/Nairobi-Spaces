@@ -21,6 +21,8 @@ urlpatterns = [
     path('<int:pk>/delete', ReservationDeleteView.as_view(),name='delete-reservation'),
     path('reservation/<int:pk>/', UpdateReservationView.as_view(), name='reservation'),
     path('reservation/', CreateReservationtView.as_view(),name='update-reservation'),
+    path('newsletter/', views.newsletter, name='newsletter'),
+    path('validate/', views.validate_email, name='validate_email'),
     
     
     

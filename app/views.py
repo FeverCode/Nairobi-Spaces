@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404, render,redirect
 from django.views import View
 from rest_framework import response, generics, status, views, permissions,viewsets
 from app.forms import LoginForm, MpesaForm, RegisterForm, ReservationForm, UpdateProfileForm, UpdateUserForm
-from app.models import Profile, Reservation, Spaces, User
+from app.models import Profile, Reservation, Spaces, SubscribedUsers, User
 from app.permissions import IsOwnerOrReadOnly
 from app.renderers import UserRenderer
 from rest_framework.response import Response
@@ -33,6 +33,8 @@ from django.http import HttpResponse, JsonResponse
 from decouple import config
 from django.views.generic import View, ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.mail import send_mail
+import re
 # Create your views here.
 def index(request):
     return render(request, 'index.html')
@@ -203,9 +205,36 @@ class CreateReservationtView(LoginRequiredMixin, CreateView):
         return data
 
 
+def newsletter(request):
+    if request.method == 'POST':
+        post_data = request.POST.copy()
+        email = post_data.get("email", None)
+        subscribedUsers = SubscribedUsers()
+        subscribedUsers.email = email
+        subscribedUsers.save()
+        # send a confirmation mail
+        subject = 'Nairobi Space NewsLetter Subscription'
+        message = 'Hello ' + \
+            ', Thanks for subscribing us. You will get notification of latest articles posted on our website. Please do not reply on this email.'
+        email_from = settings.EMAIL_HOST_USER
+        recipient_list = [email, ]
+        send_mail(subject, message, email_from, recipient_list)
+        res = JsonResponse({'msg': 'Thanks. Subscribed Successfully!'})
+        return res
+    return render(request, 'index.html')
 
 
-
+def validate_email(request):
+    email = request.POST.get("email", None)
+    if email is None:
+        res = JsonResponse({'msg': 'Email is required.'})
+    elif SubscribedUsers.objects.get(email=email):
+        res = JsonResponse({'msg': 'Email Address already exists'})
+    elif not re.match(r"^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$", email):
+        res = JsonResponse({'msg': 'Invalid Email Address'})
+    else:
+        res = JsonResponse({'msg': ''})
+    return res
 
 
 
