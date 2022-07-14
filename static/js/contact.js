@@ -1,51 +1,26 @@
-const contact = function(email, name,subject,message) {
-    var formData = new FormData();
-    formData.append('email', email);
-    formData.append('name', name);
-    formData.append('subject', subject);
-    formData.append('message', message);
-    $.ajaxSetup({
-        headers: {
-            "X-CSRFToken": document.querySelector('[name=csrfmiddlewaretoken]').value,
-        }
-    });
-    $.ajax({
-        url: '/contact/',
-        type: 'POST',
-        dataType: 'json',
-        cache: false,
-        processData: false,
-        contentType: false,
-        data: formData,
-        error: function (xhr) {
-            console.error(xhr.statusText);
-        },
-        success: function (res) {
-            $('.success').text(res.msg);
-            $('#Email').val(' ');
-            $('#Name').val(' ');
-            $('#Subject').val(' ');
-            $('#Message').val(' ');
+function getInputVal(id) {
+    return document.getElementById(id).value;
+}
 
-        }
-    });
-};
-
-(function ($) {
-    $('#submit').on('click', () => {
-        event.preventDefault();
-        const Name = $('#userName').val();
-        const Subject = $('#userSubject').val();
-        const Email = $('#userEmail').val();
-        const Message = $('#userMessage').val();
-        if (Email && Name) {
-            contact(Email, Name, Subject, Message);
-        }
+function writeUserData(fName,subject, email, message) {
+    const db = getDatabase();
+    set(ref(db, 'users/' + fName), {
+        subject: subject,
+        email: email,
+        message: message,
     });
 
-    $('#Email').on('change', (event) => {
-        event.preventDefault();
-        const email = event.target.value;
-        validateEmail(email);
-    });
-})(jQuery);
+
+
+    //Show alert
+    document.querySelector('.alert').style.display = 'block';
+
+    //Hide alert after 3 seconds
+    setTimeout(function () {
+        document.querySelector('.alert').style.display = 'none';
+    }, 3000);
+
+    document.getElementById('contact_form').reset();
+
+
+}

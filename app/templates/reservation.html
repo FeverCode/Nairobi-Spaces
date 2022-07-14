@@ -3,45 +3,66 @@
 {% load bootstrap5 %}
 {% load static%}
 {% block content %}
+<style>
+  img {
+    object-fit: cover;
+}
 
+.fill {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden
+}
 
-<div style="margin-top:100px" class="container-fluid mb-5 card" style="
-    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-    border-radius: 10px;
-  ">
+.fill img {
+    flex-shrink: 0;
+    min-width: 100%;
+    min-height: 100%
+}
+
+@media (max-width:629px) {
+    img#hide {
+        display: none;
+    }
+}
+</style>
+
+<div style="margin-top:150px;margin-bottom:150px;" class="container">
   <div class="row">
-    <div class="col-md-6">
-      <img class="img-responsive" src="/media/reservationImg.png"
-        style="width: 100%; height: 100%" />
+    <div class="col-md-6 ms-5">
+      <img class="img-responsive fill" src="/media/img/about/3.jpg" style="width: 100%; height: 100%" />
     </div>
 
-    <div class="col-md-6 mt-3">
-      <div class="content" style="background-color: none; color: #a5694b">
-   {% if form.errors %}
-                            <div class="alert alert-danger alert-dismissible" role="alert">
-                                <div id="form_errors">
-                                    {% for key, value in form.errors.items %}
-                                        <strong>{{ value }}</strong>
-                                    {% endfor %}
-                                </div>
-                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                        {% endif %}
-  <!-- FORM HERE -->
-  <form method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    <fieldset class="form-group">
-      <legend class="border-bottom mt-3">Reservations</legend>
-      {{ form|crispy }}
-    </fieldset>
-    <div class="form-group text-center">
-      <button class="col-md-4 btn btn-dark" type="submit">Reserve</button>
-    </div>
-  </form>
-</div>
+    <div class="col-md-6">
+      <div class="content">
+        {% if form.errors %}
+        <div class="alert alert-danger alert-dismissible" role="alert">
+          <div id="form_errors">
+            {% for key, value in form.errors.items %}
+            <strong>{{ value }}</strong>
+            {% endfor %}
+          </div>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        {% endif %}
+        <!-- FORM HERE -->
+        <form method="POST" enctype="multipart/form-data">
+          {% csrf_token %}
+          <fieldset class="form-group">
+            <legend class="border-bottom mt-3">Reservations</legend>
+            {{ form|crispy }}
+          </fieldset>
+          <div class="form-group text-center">
+            <button class="col-md-4 btn btn-dark" type="submit">Reserve</button>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 </div>
+
+
 {% endblock %}

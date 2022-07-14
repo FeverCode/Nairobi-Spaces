@@ -171,7 +171,26 @@
   <script src="{% static 'js/contact.js' %}"></script>
   <script type="text/javascript" src="{% static 'js/newsletter.js'%}"></script>
   <script src="{% static 'js/main.js' %}"></script>
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.9.0/firebase-app.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
 
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyDOOdLmETRtDS1ThnfFG9DHkeiHPupT2Ao",
+    authDomain: "nairobi-spaces.firebaseapp.com",
+    databaseURL: "https://nairobi-spaces-default-rtdb.firebaseio.com",
+    projectId: "nairobi-spaces",
+    storageBucket: "nairobi-spaces.appspot.com",
+    messagingSenderId: "635576806249",
+    appId: "1:635576806249:web:839fd54f26277e4d582bf8"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+</script>
 
     {% endblock %}
 
