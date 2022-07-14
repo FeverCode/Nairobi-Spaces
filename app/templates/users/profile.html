@@ -15,14 +15,8 @@
     <link rel="stylesheet" type="text/css" href=" {% static 'css/profile.css' %} ">
     {% endblock %}
 
-
-
-
-
-
-
 <section class="h-100 gradient-custom-2">
-    <div style="margin-top: 40px" class="container py-5 h-100">
+    <div style="margin-top:5px" class="container py-5 h-100">
         <div class="row d-flex justify-content-center align-items-center h-100">
             <div class="col col-lg-9 col-xl-7">
                 <div class="card">
@@ -41,7 +35,7 @@
 
                     <div class="p-4 text-black" style="background-color: #f8f9fa;">
                         <div class="d-flex justify-content-between text-center py-1">
-                            <a href="{% url 'profile'%}">
+                            <a href="{% url 'edit-profile'%}">
                                 <i class="bi bi-pencil-square"></i>
                                 <p>Edit Profile</p>
                             </a>
@@ -70,8 +64,8 @@
                             <p class="mb-0"><a href="#!" class="text-muted">Show all</a></p>
                         </div>
                         <div class="row">
-                            {% for post in posts %}
-                            {% if user.id == post.id %}
+                            {% for reservation in reservations %}
+                            {% if user.id == reservation.user.id %}
                             <div class="col">
 
                                 <div class="card" style="width: 18rem;">

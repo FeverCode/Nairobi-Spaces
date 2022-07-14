@@ -18,6 +18,7 @@ urlpatterns = [
     url(r'^oauth/', include('social_django.urls', namespace='social')),
     path('password-reset/', views.ResetPasswordView.as_view(), name='password_reset'),
     path('profile/', views.profile, name='profile'),
+    path('edit/profile/', views.edit_profile, name='edit-profile'),
     # path('register/',RegisterView.as_view(), name='register'),
     # path('login/', views.LoginAPIView.as_view(), name='login'),
     # path('email-verify/', VerifyEmail.as_view(), name="email-verify"),
