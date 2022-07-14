@@ -1,13 +1,19 @@
-from django.urls import path
+from django.urls import include, path
+
+from app.forms import LoginForm
 from . import views
 from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 from django.conf import settings
 from django.conf.urls.static import static
+from django.conf.urls import url
 
 urlpatterns = [
     path('', views.index),
+    path('register/', views.RegisterView.as_view(), name='users-register'),
+    path('login/', views.CustomLoginView.as_view(redirect_authenticated_user=True,template_name='registration/login.html', authentication_form=LoginForm), name='login'),
+    url(r'^oauth/', include('social_django.urls', namespace='social')),
     # path('register/',RegisterView.as_view(), name='register'),
     # path('login/', views.LoginAPIView.as_view(), name='login'),
     # path('email-verify/', VerifyEmail.as_view(), name="email-verify"),
