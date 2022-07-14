@@ -250,12 +250,6 @@ def validate_email(request):
 
 
 
-
-
-
-
-
-
 # class RegisterView(generics.GenericAPIView):
     
 #     """User registers with name, email and password
