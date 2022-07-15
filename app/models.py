@@ -121,22 +121,6 @@ class Profile(models.Model):
     def __str__(self):
         return f'{self.user.username} Profile'
     
-    @receiver(post_save, sender=User)
-    def create_profile(sender, instance, created, **kwargs):
-        if created:
-            Profile.objects.create(user=instance)
-
-
-    @receiver(post_save, sender=User)
-    def save_profile(sender, instance, **kwargs):
-        instance.profile.save()
-
-    def create_profile(self):
-        self.save()
-
-    def update_profile(self, new_bio):
-        self.bio = new_bio
-        self.save()
     
 
 
