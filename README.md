@@ -21,7 +21,7 @@
  Nairobi Spaces is a community building webapp which gives people the opportunity to organise groups and host in-person events for people with similar interest at budget friendly rates.
 
 Live link to the project
-[Nairobi Spaces](https://nairobi-spaces.herokuapp.com/)
+[Nairobi Spaces](https://nairobi-spaces.up.railway.app)
 
 ## Requirements
 
